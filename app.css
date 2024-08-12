@@ -5,6 +5,8 @@ iframe {
     top: 0;
     left: 0;
     z-index: 5;
+    border: none;
+    margin: 0;
 }
 body {
     background: black;
