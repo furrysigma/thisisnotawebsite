@@ -38,6 +38,7 @@
                 videoElem.src = patchUrl(videoElem.getAttribute("src"))
         });
         document.querySelectorAll("*[data-links]").forEach(link => link.dataset.links = patchUrl(link.dataset.links));
+        document.querySelectorAll("*[data-linkatend]").forEach(link => link.dataset.linkatend = patchUrl(link.dataset.linkatend));
         return new Blob([document.documentElement.innerHTML], {type: "text/html"})
     }
     var codes = JSON.parse(await fetch(`https://raw.githubusercontent.com/furrysigma/archive/main/codes/.json`).then(_ => _.text()))
