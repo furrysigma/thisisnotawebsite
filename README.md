@@ -1,14 +1,15 @@
-# Archive patcher
+# Modded thisisnotawebsitedotcom.com
 
-This exists so that after [thisisnotawebsitedotcom.com](thisisnotawebsitedotcom.com) is shut down or changed drastically, it can still be accessed and used.<br>
-All of the assets come from the [archive](https://github.com/furrysigma/archive). It does not work offline.
+A modded version of thisisnotawebsitedotcom.com that will stay up forever!<br>
+The source files for thisisnotawebsitedotcom.com (and this page's provider) is available [here](https://github.com/furrysigma/archive).
 
-## Where is it?
+[https://furrysigma.github.io/thisisnotawebsite](https://furrysigma.github.io/thisisnotawebsite)
 
-You can find it [here](https://furrysigma.github.io/thisisnotawebsite)!!
+## Mods
 
-## Known Issues:
- - The bottle on the left does not properly pop up. I cannot figure this one out for the life of me.
- - Fonts are using fallbacks (not a huge issue).
+> You can access the mod menu by typing "mods" as a code.<br>
+> Type in a GitHub repository as mods. Do not include full URLs, only \<username>/\<repo name> (ex: furrysigma/sample-mod).
 
-All assets belong to the website's original owners.
+Currently, not many mods exist, but here's a known list of mods with their codes and repositories:
+ - Sample mod ("skib") - `furrysigma/sample-mod`
+ - Boykisser 1984 ("boykisser") - `raymonable/boykisser-code` (this is a joke btw)
