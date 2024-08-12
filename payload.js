@@ -1,3 +1,4 @@
+const rootURL = "https://raw.githubusercontent.com/furrysigma/archive/main";
 (async() => {
     // SFX patch
     const XMLRequest = XMLHttpRequest;
@@ -11,7 +12,7 @@
             );
             if (uri.host != "thisisreallynotawebsite.com")
                 return originalCall.call(XHR, method, url, ...d);
-            var archiveUri = `https://raw.githubusercontent.com/furrysigma/archive/main/domains/thisisnotawebsitedotcom.com${uri.pathname}`;
+            var archiveUri = `${rootURL}/domains/thisisnotawebsitedotcom.com${uri.pathname}`;
             console.log(archiveUri)
             return originalCall.call(XHR, method, archiveUri, ...d);
         }
@@ -27,7 +28,7 @@
             var url = new URL(url, "https://thisisnotawebsitedotcom.com");
             if (url.hostname != "files.thisisnotawebsitedotcom.com")
                 return url;
-            return `https://raw.githubusercontent.com/furrysigma/archive/main/domains/files.thisisnotawebsitedotcom.com${url.pathname}`
+            return `${rootURL}/domains/files.thisisnotawebsitedotcom.com${url.pathname}`
         }
         var document = (new DOMParser()).parseFromString(docBlob, "text/html");
         document.querySelectorAll("img").forEach(img => img.src = patchUrl(img.getAttribute("src")));
@@ -41,7 +42,7 @@
         document.querySelectorAll("*[data-linkatend]").forEach(link => link.dataset.linkatend = patchUrl(link.dataset.linkatend));
         return new Blob([document.documentElement.innerHTML], {type: "text/html"})
     }
-    var codes = JSON.parse(await fetch(`https://raw.githubusercontent.com/furrysigma/archive/main/codes/.json`).then(_ => _.text()))
+    var codes = JSON.parse(await fetch(`${rootURL}/codes/.json`).then(_ => _.text()))
         .map(block => {
             block.aliases.forEach((alias, idx) => {
                 block.aliases[idx] = alias.replace(/[^a-z0-9?]/gi, '').toLowerCase()
@@ -53,26 +54,30 @@
         "mp3": "audio/mpeg",
         "html": "text/html",
         "png": "image/png"
+    }; var overwrittenCodes = {
+        "dispensemytreat": "THE FILE IS TOO LARGE TO STORE IN THE ARCHIVE, SORRY!"
     }
     const originalFetch = fetch;
     window.fetch = function(url, data) {
         if (url != "https://codes.thisisnotawebsitedotcom.com/")
             return originalFetch(url, data);
-        var code = data.body.get("code");
+        var code = data.body.get("code").toLowerCase();
         var codeIndex = codes.find(v => {
             return v.aliases.includes(code)
         })
         if (codeIndex) {
-            console.log(codeIndex)
             return new Promise(async r => {
                 var e = codeIndex.filepath.split(".");
                 e = e[e.length - 1];
-                var f = await originalFetch(`https://raw.githubusercontent.com/furrysigma/archive/main/codes/${codeIndex.filepath}`);
+                var f = await originalFetch(`${rootURL}/codes/${codeIndex.filepath}`);
                 
                 var b = (await f.blob());
                 b = b.slice(0, b.size, mimetypes[e] || "text/plain");
                 if (e == "html")
                     b = patchCodeDocument(await b.text());
+                if (overwrittenCodes[code]) {
+                    b = new Blob([`<div class="hidden has-text" data-controller="content" data-text="${overwrittenCodes[code]}"></div>`], {type: "text/html"})
+                }
                 r(new Response(b));
                 
             })
