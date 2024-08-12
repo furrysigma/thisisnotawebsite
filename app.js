@@ -92,9 +92,11 @@ var patchDocument = async (htm) => {
         })))
     })
 };
-fetch(baseDocument)
-    .then(_ => _.text())
-    .then(async htm => {
-        document.querySelector("iframe").src =
-            await patchDocument(htm);
-    })
+const initApp = () => {
+    fetch(baseDocument)
+        .then(_ => _.text())
+        .then(async htm => {
+            document.querySelector("iframe").src =
+                await patchDocument(htm);
+        })
+}

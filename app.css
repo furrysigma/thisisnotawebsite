@@ -5,8 +5,6 @@ iframe {
     top: 0;
     left: 0;
     z-index: 5;
-    border: none;
-    margin: 0;
 }
 body {
     background: black;
@@ -19,4 +17,42 @@ body {
     font-size: 2vh;
     font-family: monospace;
     color: white;
+}
+.mods {
+    height: 50%;
+    aspect-ratio: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transition: 0.25s opacity;
+    background: #000a;
+    padding: 1vh;
+    color: white;
+    font-family: monospace;
+    font-size: 2vh;
+    overflow-y: scroll;
+}
+.mods span {
+    display: block;
+    margin-top: 1vh;
+    font-size: 1.5vh;
+    opacity: 0.5;
+    font-style: italic;
+}
+.mods a {
+    cursor: pointer;
+}
+.mods a.mod-list-item:hover {
+    text-decoration: line-through;
+}
+.mods input {
+    width: 35%;
+}
+.mods.active {
+    opacity: 1;
+    pointer-events: all;
 }

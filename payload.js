@@ -57,7 +57,7 @@ const rootURL = "https://raw.githubusercontent.com/furrysigma/archive/main";
     }; var overwrittenCodes = {
         "dispensemytreat": "THE FILE IS TOO LARGE TO STORE IN THE ARCHIVE, SORRY!"
     }
-    const originalFetch = fetch;
+    const originalFetch = fetch; var relay;
     window.fetch = function(url, data) {
         if (url != "https://codes.thisisnotawebsitedotcom.com/")
             return originalFetch(url, data);
@@ -75,15 +75,42 @@ const rootURL = "https://raw.githubusercontent.com/furrysigma/archive/main";
                 b = b.slice(0, b.size, mimetypes[e] || "text/plain");
                 if (e == "html")
                     b = patchCodeDocument(await b.text());
-                if (overwrittenCodes[code]) {
+                if (overwrittenCodes[code])
                     b = new Blob([`<div class="hidden has-text" data-controller="content" data-text="${overwrittenCodes[code]}"></div>`], {type: "text/html"})
-                }
                 r(new Response(b));
-                
             })
-        } else
-            return new Promise(r => r(
-                new Response("?", {status: 404})
-            ))
+        } else { 
+            window.parent.postMessage(JSON.stringify({
+                status: "checkForMod",
+                code
+            }))
+            return new Promise(r => {
+                relay = r;
+            })
+        }
     }
+    setInterval(() => {
+        // Disable caching of the mods display so we can forcefully fetch it again. This is incredibly hacky but I want to avoid modifying the original source as much as possible
+        if (!!document.querySelector("#mods"))
+            document.querySelector("#mods").remove();
+    }, 1000)
+    window.addEventListener("message", async (e) => {
+        try {
+            var data = JSON.parse(e.data);
+            if (data.status == "checkForMod" && !!relay) {
+                if (data.response) {
+                    var b = await (await originalFetch(data.file)).blob();
+                    var e = data.fileName.split(".");
+                    e = e[e.length - 1];
+                    b = b.slice(0, b.size, mimetypes[e] || "text/plain");
+                    relay(new Response(b));
+                } else {
+                    relay(
+                        new Response("?", {status: 404})
+                    )
+                }
+                relay = null;
+            };
+        } catch(err) {};
+    })
 })();
